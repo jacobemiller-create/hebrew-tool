@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Hebrew — Word Generator</title>
+    <style>
+        :root {
+            --blue: #1a4b8c;
+            --blue-mid: #2d6cc0;
+            --blue-light: #e8f0fc;
+            --gold: #b8922a;
+            --bg: #f4f1ea;
+            --card: #ffffff;
+            --text: #1a1a2e;
+            --muted: #6b7280;
+            --border: #e2e8f0;
+            --shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        header {
+            background: var(--blue);
+            color: white;
+            text-align: center;
+            padding: 24px 20px 20px;
+        }
+        .heb-title {
+            font-size: 2rem;
+            font-family: 'Times New Roman', Georgia, serif;
+            direction: rtl;
+            letter-spacing: 4px;
+            line-height: 1;
+        }
+        header h1 {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-top: 6px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ── Nav ── */
+        nav {
+            background: #0f3266;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.65);
+            text-decoration: none;
+            padding: 11px 22px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.15s;
+            letter-spacing: 0.3px;
+        }
+        .nav-link:hover { color: white; }
+        .nav-link.active {
+            color: white;
+            border-bottom-color: #c9a84c;
+        }
+
+        /* ── Layout ── */
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 28px 18px 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 310px;
+            gap: 22px;
+            align-items: start;
+        }
+
+        .right-col {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 22px 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .quick-btns { display: flex; gap: 6px; }
+        .quick-btn {
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            background: white;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.12s;
+        }
+        .quick-btn:hover { border-color: var(--blue-mid); color: var(--blue-mid); }
+
+        /* ── Letter toggles ── */
+        .letter-toggles {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 7px;
+            direction: rtl;
+        }
+        .toggle-letter {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 4px 6px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.12s;
+            user-select: none;
+            opacity: 0.32;
+        }
+        .toggle-letter.selected {
+            opacity: 1;
+            border-color: var(--blue);
+            background: var(--blue-light);
+        }
+        .toggle-letter:hover { opacity: 1; border-color: var(--blue-mid); }
+        .toggle-letter .tl-heb {
+            font-size: 24px;
+            font-family: 'Times New Roman', Georgia, serif;
+            color: var(--blue);
+            line-height: 1.2;
+        }
+        .toggle-letter .tl-name {
+            font-size: 0.54rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+        .toggle-letter .tl-sofit {
+            font-size: 0.72em;
+            opacity: 0.55;
+        }
+
+        /* ── Vowel toggles ── */
+        .vowel-toggles {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+        }
+        .toggle-vowel {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.12s;
+            user-select: none;
+            opacity: 0.32;
+        }
+        .toggle-vowel.selected {
+            opacity: 1;
+            border-color: var(--blue);
+            background: var(--blue-light);
+        }
+        .toggle-vowel:hover { opacity: 1; border-color: var(--blue-mid); }
+        .toggle-vowel .tv-glyph {
+            font-size: 22px;
+            font-family: 'Times New Roman', Georgia, serif;
+            color: var(--blue);
+            direction: rtl;
+            width: 26px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .toggle-vowel .tv-name {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #444;
+        }
+        .toggle-vowel .tv-sound {
+            font-size: 0.62rem;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        /* ── Settings card ── */
+        .setting-group { margin-bottom: 20px; }
+        .setting-group:last-of-type { margin-bottom: 0; }
+        .setting-group > label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+
+        /* Pill selector */
+        .pill-selector { display: flex; gap: 8px; }
+        .pill {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.12s;
+            text-align: center;
+        }
+        .pill:hover { border-color: var(--blue-mid); color: var(--blue-mid); }
+        .pill.active { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+
+        /* Stepper */
+        .stepper {
+            display: flex;
+            align-items: stretch;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            width: fit-content;
+        }
+        .stepper-btn {
+            width: 46px;
+            border: none;
+            background: #f8f9fa;
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--blue);
+            cursor: pointer;
+            transition: background 0.12s;
+            line-height: 1;
+            padding-bottom: 2px;
+        }
+        .stepper-btn:hover { background: var(--blue-light); }
+        .stepper-btn:disabled { color: #ccc; cursor: default; background: #f8f9fa; }
+        .stepper-val {
+            min-width: 54px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text);
+            border-left: 2px solid var(--border);
+            border-right: 2px solid var(--border);
+            padding: 8px 6px;
+        }
+
+        /* Generate button */
+        .generate-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--blue);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+        .generate-btn:hover { background: var(--blue-mid); }
+        .generate-btn:active { transform: scale(0.98); }
+
+        .error-msg {
+            display: none;
+            margin-top: 10px;
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            padding: 9px 13px;
+            font-size: 0.84rem;
+            color: #dc2626;
+        }
+        .error-msg.show { display: block; }
+
+        /* ── Grammar divider & badge ── */
+        .settings-divider {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            color: #c4c9d4;
+            margin: 6px 0 16px;
+        }
+        .settings-divider::before,
+        .settings-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+        .word-meaning {
+            font-size: 0.72rem;
+            color: var(--gold);
+            font-weight: 500;
+            margin-top: 4px;
+            font-style: italic;
+        }
+        .pill-4 { gap: 5px; }
+        .pill-4 .pill { font-size: 0.85rem; padding: 9px 4px; }
+
+        /* ── Final-forms toggle ── */
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .setting-row-label { flex: 1; }
+        .setting-row-label span {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        .setting-row-label small {
+            display: block;
+            font-size: 0.67rem;
+            color: #aaa;
+            margin-top: 2px;
+        }
+        .sw {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+        .sw input { opacity: 0; width: 0; height: 0; position: absolute; }
+        .sw-track {
+            position: absolute;
+            inset: 0;
+            background: #d1d5db;
+            border-radius: 26px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .sw-track::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 3px;
+            top: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+        .sw input:checked ~ .sw-track { background: var(--blue); }
+        .sw input:checked ~ .sw-track::before { transform: translateX(20px); }
+
+        /* ── Output ── */
+        .output-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .print-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.12s;
+        }
+        .print-btn:hover { border-color: var(--blue-mid); color: var(--blue-mid); }
+
+        .word-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+            gap: 14px;
+        }
+        .word-card {
+            position: relative;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 22px 14px 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.14s;
+            background: white;
+        }
+        .word-card:hover {
+            border-color: var(--blue-mid);
+            box-shadow: 0 4px 16px rgba(26,75,140,0.12);
+            transform: translateY(-2px);
+        }
+        .word-card.playing {
+            border-color: var(--blue);
+            background: var(--blue-light);
+        }
+        .word-number {
+            position: absolute;
+            top: 8px;
+            left: 10px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: #d1d5db;
+        }
+        .word-hebrew {
+            font-size: 54px;
+            font-family: 'Times New Roman', Georgia, serif;
+            color: var(--blue);
+            line-height: 1.25;
+            direction: rtl;
+        }
+        .word-translit {
+            font-size: 0.8rem;
+            color: var(--muted);
+            font-style: italic;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+        }
+        .word-play {
+            position: absolute;
+            top: 7px;
+            right: 9px;
+            width: 26px;
+            height: 26px;
+            border: none;
+            background: none;
+            color: #d1d5db;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            padding: 0;
+            transition: all 0.12s;
+        }
+        .word-play:hover { background: var(--blue-light); color: var(--blue); }
+
+        /* ── Print ── */
+        @media print {
+            header, nav, .settings-grid { display: none !important; }
+            .container { padding: 0; }
+            .card.output-card { box-shadow: none; border-radius: 0; }
+            .output-header .print-btn { display: none; }
+            .word-card { break-inside: avoid; border: 1.5px solid #ccc; }
+            .word-play { display: none; }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 700px) {
+            .settings-grid { grid-template-columns: 1fr; }
+            .letter-toggles { grid-template-columns: repeat(4, 1fr); }
+            .word-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="heb-title">אָלֶף־בֵּית</div>
+    <h1>Learn Hebrew</h1>
+</header>
+
+<nav>
+    <a href="index.html" class="nav-link">Letters</a>
+    <a href="generator.html" class="nav-link active">Word Generator</a>
+</nav>
+
+<div class="container">
+
+    <div class="settings-grid">
+
+        <!-- ── Known Letters ── -->
+        <div class="card">
+            <div class="card-header">
+                <div class="section-label">Known Letters</div>
+                <div class="quick-btns">
+                    <button class="quick-btn" id="allLetters">All</button>
+                    <button class="quick-btn" id="noneLetters">None</button>
+                </div>
+            </div>
+            <div class="letter-toggles" id="letterToggles"></div>
+        </div>
+
+        <div class="right-col">
+
+            <!-- ── Known Vowels ── -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="section-label">Known Vowels</div>
+                    <div class="quick-btns">
+                        <button class="quick-btn" id="allVowels">All</button>
+                        <button class="quick-btn" id="noneVowels">None</button>
+                    </div>
+                </div>
+                <div class="vowel-toggles" id="vowelToggles"></div>
+            </div>
+
+            <!-- ── Word Settings ── -->
+            <div class="card">
+                <div class="section-label" style="margin-bottom:18px">Word Settings</div>
+
+                <div class="setting-group">
+                    <label>Letters per word</label>
+                    <div class="pill-selector pill-4" id="lengthPills">
+                        <button class="pill" data-val="1">1</button>
+                        <button class="pill active" data-val="2">2</button>
+                        <button class="pill" data-val="3">3</button>
+                        <button class="pill" data-val="words">Words</button>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label>Number of words</label>
+                    <div class="stepper">
+                        <button class="stepper-btn" id="countDown">−</button>
+                        <div class="stepper-val" id="countVal">5</div>
+                        <button class="stepper-btn" id="countUp">+</button>
+                    </div>
+                </div>
+
+                <div class="setting-row" id="finalFormsRow">
+                    <div class="setting-row-label">
+                        <span>Final Letters</span>
+                        <small>Sofit forms appear at word endings only</small>
+                    </div>
+                    <label class="sw">
+                        <input type="checkbox" id="finalFormsToggle">
+                        <span class="sw-track"></span>
+                    </label>
+                </div>
+
+                <button class="generate-btn" id="generateBtn">Generate Words</button>
+                <div class="error-msg" id="errorMsg"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ── Output ── -->
+    <div class="card output-card" id="outputCard" style="display:none">
+        <div class="output-header">
+            <div class="section-label" id="outputLabel">Generated Words</div>
+            <button class="print-btn" onclick="window.print()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/>
+                </svg>
+                Print
+            </button>
+        </div>
+        <div class="word-grid" id="wordGrid"></div>
+    </div>
+
+</div>
+
+<script>
+// forms[0] = primary TTS/display form; extra forms = alternate shapes (same sound)
+const LETTERS = [
+    { forms: ['א'],         name: 'Aleph',  translit: ''   },
+    { forms: ['בּ'],        name: 'Bet',    translit: 'b'  },
+    { forms: ['ב'],         name: 'Vet',    translit: 'v'  },
+    { forms: ['ג'],         name: 'Gimel',  translit: 'g'  },
+    { forms: ['ד'],         name: 'Dalet',  translit: 'd'  },
+    { forms: ['ה'],         name: 'He',     translit: 'h'  },
+    { forms: ['ו'],         name: 'Vav',    translit: 'v'  },
+    { forms: ['ז'],         name: 'Zayin',  translit: 'z'  },
+    { forms: ['ח'],         name: 'Chet',   translit: 'ch' },
+    { forms: ['ט'],         name: 'Tet',    translit: 't'  },
+    { forms: ['י'],         name: 'Yod',    translit: 'y'  },
+    { forms: ['כּ'],        name: 'Kaf',    translit: 'k'  },
+    { forms: ['כ', 'ך'],   name: 'Chaf',   translit: 'ch' },
+    { forms: ['ל'],         name: 'Lamed',  translit: 'l'  },
+    { forms: ['מ', 'ם'],   name: 'Mem',    translit: 'm'  },
+    { forms: ['נ', 'ן'],   name: 'Nun',    translit: 'n'  },
+    { forms: ['ס'],         name: 'Samech', translit: 's'  },
+    { forms: ['ע'],         name: 'Ayin',   translit: ''   },
+    { forms: ['פּ'],        name: 'Pe',     translit: 'p'  },
+    { forms: ['פ', 'ף'],   name: 'Fe',     translit: 'f'  },
+    { forms: ['צ', 'ץ'],   name: 'Tsadi',  translit: 'ts' },
+    { forms: ['ק'],         name: 'Qof',    translit: 'k'  },
+    { forms: ['ר'],         name: 'Resh',   translit: 'r'  },
+    { forms: ['שׁ'],        name: 'Shin',   translit: 'sh' },
+    { forms: ['שׂ'],        name: 'Sin',    translit: 's'  },
+    { forms: ['ת'],         name: 'Tav',    translit: 't'  },
+];
+
+const VOWELS = [
+    { name: 'Kamatz',     symbol: 'ָ',  glyph: 'אָ',  sound: '"ah"', translit: 'ah' },
+    { name: 'Patach',     symbol: 'ַ',  glyph: 'אַ',  sound: '"ah"', translit: 'ah' },
+    { name: 'Segol',      symbol: 'ֶ',  glyph: 'אֶ',  sound: '"eh"', translit: 'eh' },
+    { name: 'Tsere',      symbol: 'ֵ',  glyph: 'אֵ',  sound: '"ay"', translit: 'ay' },
+    { name: 'Hirik',      symbol: 'ִ',  glyph: 'אִ',  sound: '"ee"', translit: 'ee' },
+    { name: 'Holam',      symbol: 'ֹ',  glyph: 'אֹ',  sound: '"oh"', translit: 'oh' },
+    { name: 'Holam Male', symbol: 'וֹ', glyph: 'אוֹ', sound: '"oh"', translit: 'oh' },
+    { name: 'Kubutz',     symbol: 'ֻ',  glyph: 'אֻ',  sound: '"oo"', translit: 'oo' },
+    { name: 'Shuruk',     symbol: 'וּ', glyph: 'אוּ', sound: '"oo"', translit: 'oo' },
+    { name: 'Shva',       symbol: 'ְ',  glyph: 'אְ',  sound: '"ə"',  translit: 'e'  },
+];
+
+// ── State ────────────────────────────────────────────────────────────────────
+
+let selectedLetters = new Set(LETTERS.map((_, i) => i));
+let selectedVowels  = new Set(VOWELS.map((_, i) => i));
+let wordLength    = 2;   // 1 | 2 | 3 | 'words'
+let wordCount     = 5;
+let useFinalForms = false;
+let heVoice       = null;
+
+// ── Grammar helpers (applied silently for 1/2/3-letter generation) ───────────
+
+const GUTTURALS = new Set(['א', 'ה', 'ח', 'ע']);
+
+function isLongVowel(sym) {
+    return sym === 'ֵ' || sym === 'ֹ' || sym === 'ִ' || sym.charCodeAt(0) === 0x05D5;
+}
+
+function pickVowelForLetter(letter, availVowels) {
+    // Gutturals (א ה ח ע) strongly prefer patach / kamatz
+    if (GUTTURALS.has(letter.forms[0])) {
+        const aClass = availVowels.filter(v => v.name === 'Patach' || v.name === 'Kamatz');
+        if (aClass.length > 0) return aClass[Math.floor(Math.random() * aClass.length)];
+    }
+    return availVowels[Math.floor(Math.random() * availVowels.length)];
+}
+
+// ── Hebrew word dictionary ────────────────────────────────────────────────────
+// h = Hebrew with nikud · t = transliteration · m = English meaning
+
+const WORD_DICT = [
+    // ── Body ──────────────────────────────────────────────────────────────────
+    { h: 'יָד',          t: 'yad',         m: 'hand'              },
+    { h: 'רֶגֶל',        t: 'regel',       m: 'foot / leg'        },
+    { h: 'לֵב',          t: 'lev',         m: 'heart'             },
+    { h: 'רֹאשׁ',        t: 'rosh',        m: 'head'              },
+    { h: 'עַיִן',        t: 'ayin',        m: 'eye'               },
+    { h: 'אֹזֶן',        t: 'ozen',        m: 'ear'               },
+    { h: 'פֶּה',         t: 'peh',         m: 'mouth'             },
+    { h: 'אַף',          t: 'af',          m: 'nose'              },
+    { h: 'גּוּף',         t: 'guf',         m: 'body'              },
+    { h: 'עֶצֶם',        t: 'etzem',       m: 'bone'              },
+    { h: 'דָּם',         t: 'dam',         m: 'blood'             },
+    { h: 'שֵׂיעָר',      t: 'se\'ar',      m: 'hair'              },
+    { h: 'שֵׁן',         t: 'shen',        m: 'tooth'             },
+    { h: 'לָשׁוֹן',      t: 'lashon',      m: 'tongue / language' },
+    { h: 'צַוָּאר',      t: 'tzavar',      m: 'neck'              },
+    { h: 'כָּתֵף',       t: 'katef',       m: 'shoulder'          },
+    { h: 'זְרוֹעַ',      t: 'zeroa',       m: 'arm'               },
+    { h: 'אֶצְבַּע',     t: 'etzba',       m: 'finger'            },
+    { h: 'בֶּרֶךְ',      t: 'berech',      m: 'knee'              },
+    { h: 'בֶּטֶן',       t: 'beten',       m: 'belly / stomach'   },
+    { h: 'גַּב',         t: 'gav',         m: 'back'              },
+    { h: 'פָּנִים',      t: 'panim',       m: 'face'              },
+    { h: 'שְׂפָתַיִם',   t: 'sftayim',     m: 'lips'              },
+    { h: 'עוֹר',         t: 'or',          m: 'skin'              },
+    { h: 'צֶלַע',        t: 'tzela',       m: 'rib / side'        },
+    // ── Family & people ───────────────────────────────────────────────────────
+    { h: 'אָב',          t: 'av',          m: 'father'            },
+    { h: 'אֵם',          t: 'em',          m: 'mother'            },
+    { h: 'אָח',          t: 'ach',         m: 'brother'           },
+    { h: 'אָחוֹת',       t: 'achot',       m: 'sister'            },
+    { h: 'בֵּן',         t: 'ben',         m: 'son'               },
+    { h: 'בַּת',         t: 'bat',         m: 'daughter'          },
+    { h: 'יֶלֶד',        t: 'yeled',       m: 'boy / child'       },
+    { h: 'יַלְדָּה',     t: 'yaldah',      m: 'girl'              },
+    { h: 'אִישׁ',        t: 'ish',         m: 'man'               },
+    { h: 'אִשָּׁה',      t: 'ishah',       m: 'woman'             },
+    { h: 'זָקֵן',        t: 'zaken',       m: 'old man / elder'   },
+    { h: 'סָבָא',        t: 'saba',        m: 'grandfather'       },
+    { h: 'סָבְתָא',      t: 'savta',       m: 'grandmother'       },
+    { h: 'דּוֹד',        t: 'dod',         m: 'uncle'             },
+    { h: 'דּוֹדָה',      t: 'dodah',       m: 'aunt'              },
+    { h: 'חָתָן',        t: 'chatan',      m: 'groom / son-in-law'},
+    { h: 'כַּלָּה',      t: 'kalah',       m: 'bride / fiancée'   },
+    { h: 'גֶּבֶר',       t: 'gever',       m: 'man / fellow'      },
+    { h: 'נַעַר',        t: 'naar',        m: 'youth / young man' },
+    { h: 'נַעֲרָה',      t: 'naarah',      m: 'young woman'       },
+    { h: 'רֵעַ',         t: 'rea',         m: 'friend / neighbor' },
+    { h: 'אוֹיֵב',       t: 'oyev',        m: 'enemy'             },
+    // ── Nature & environment ──────────────────────────────────────────────────
+    { h: 'שֶׁמֶשׁ',      t: 'shemesh',     m: 'sun'               },
+    { h: 'יָרֵחַ',       t: 'yareach',     m: 'moon'              },
+    { h: 'כּוֹכָב',      t: 'kochav',      m: 'star'              },
+    { h: 'שָׁמַיִם',     t: 'shamayim',    m: 'sky / heavens'     },
+    { h: 'אֶרֶץ',        t: 'eretz',       m: 'land / earth'      },
+    { h: 'אֲדָמָה',      t: 'adamah',      m: 'ground / soil'     },
+    { h: 'עָפָר',        t: 'afar',        m: 'dust / dirt'       },
+    { h: 'חוֹל',         t: 'chol',        m: 'sand'              },
+    { h: 'סֶלַע',        t: 'sela',        m: 'rock / cliff'      },
+    { h: 'מַיִם',        t: 'mayim',       m: 'water'             },
+    { h: 'אֵשׁ',         t: 'esh',         m: 'fire'              },
+    { h: 'רוּחַ',        t: 'ruach',       m: 'wind / spirit'     },
+    { h: 'עֵץ',          t: 'etz',         m: 'tree / wood'       },
+    { h: 'פֶּרַח',       t: 'perach',      m: 'flower'            },
+    { h: 'עֶשֶׂב',       t: 'esev',        m: 'grass / herb'      },
+    { h: 'אֶבֶן',        t: 'even',        m: 'stone'             },
+    { h: 'עָנָן',        t: 'anan',        m: 'cloud'             },
+    { h: 'גֶּשֶׁם',      t: 'geshem',      m: 'rain'              },
+    { h: 'שֶׁלֶג',       t: 'sheleg',      m: 'snow'              },
+    { h: 'קֶרַח',        t: 'kerach',      m: 'ice'               },
+    { h: 'בָּרָק',       t: 'barak',       m: 'lightning'         },
+    { h: 'רַעַם',        t: 'raam',        m: 'thunder'           },
+    { h: 'עָשָׁן',       t: 'ashan',       m: 'smoke'             },
+    { h: 'אֲוִיר',       t: 'avir',        m: 'air / atmosphere'  },
+    { h: 'שָׂדֶה',       t: 'sadeh',       m: 'field'             },
+    { h: 'יַעַר',        t: 'yaar',        m: 'forest'            },
+    { h: 'גַּן',         t: 'gan',         m: 'garden'            },
+    { h: 'כֶּרֶם',       t: 'kerem',       m: 'vineyard'          },
+    { h: 'יָם',          t: 'yam',         m: 'sea'               },
+    { h: 'נַחַל',        t: 'nachal',      m: 'stream / brook'    },
+    { h: 'נָהָר',        t: 'nahar',       m: 'river'             },
+    { h: 'אֲגַם',        t: 'agam',        m: 'lake'              },
+    { h: 'חוֹף',         t: 'chof',        m: 'shore / beach'     },
+    { h: 'הַר',          t: 'har',         m: 'mountain'          },
+    { h: 'גִּבְעָה',     t: 'givah',       m: 'hill'              },
+    { h: 'עֵמֶק',        t: 'emek',        m: 'valley'            },
+    { h: 'מִדְבָּר',     t: 'midbar',      m: 'desert'            },
+    { h: 'בְּאֵר',       t: 'beer',        m: 'well'              },
+    { h: 'צֵל',          t: 'tzel',        m: 'shadow / shade'    },
+    { h: 'אוֹר',         t: 'or',          m: 'light'             },
+    { h: 'חֹשֶׁךְ',      t: 'choshech',    m: 'darkness'          },
+    // ── Animals ───────────────────────────────────────────────────────────────
+    { h: 'כֶּלֶב',       t: 'kelev',       m: 'dog'               },
+    { h: 'חָתוּל',       t: 'chatul',      m: 'cat'               },
+    { h: 'דָּג',         t: 'dag',         m: 'fish'              },
+    { h: 'צִפּוֹר',      t: 'tsipor',      m: 'bird'              },
+    { h: 'עוֹף',         t: 'of',          m: 'bird / poultry'    },
+    { h: 'סוּס',         t: 'sus',         m: 'horse'             },
+    { h: 'פָּרָה',       t: 'parah',       m: 'cow'               },
+    { h: 'שׁוֹר',        t: 'shor',        m: 'ox / bull'         },
+    { h: 'כֶּבֶשׂ',      t: 'keves',       m: 'lamb'              },
+    { h: 'עֵז',          t: 'ez',          m: 'goat'              },
+    { h: 'חֲמוֹר',       t: 'chamor',      m: 'donkey'            },
+    { h: 'גָּמָל',       t: 'gamal',       m: 'camel'             },
+    { h: 'אַרְיֵה',      t: 'arye',        m: 'lion'              },
+    { h: 'דֹּב',         t: 'dov',         m: 'bear'              },
+    { h: 'זְאֵב',        t: 'zeev',        m: 'wolf'              },
+    { h: 'שׁוּעָל',      t: 'shual',       m: 'fox'               },
+    { h: 'נָחָשׁ',       t: 'nachash',     m: 'snake'             },
+    { h: 'אַיָּל',       t: 'ayal',        m: 'deer / stag'       },
+    { h: 'פִּיל',        t: 'pil',         m: 'elephant'          },
+    { h: 'קוֹף',         t: 'kof',         m: 'monkey / ape'      },
+    { h: 'יוֹנָה',       t: 'yonah',       m: 'dove / pigeon'     },
+    { h: 'תַּרְנְגוֹל',  t: 'tarnegol',    m: 'rooster'           },
+    { h: 'אַרְנֶבֶת',    t: 'arnevet',     m: 'rabbit'            },
+    { h: 'עַכְבָּר',     t: 'achbar',      m: 'mouse'             },
+    { h: 'דְּבוֹרָה',    t: 'devorah',     m: 'bee'               },
+    { h: 'חַיָּה',       t: 'chayah',      m: 'animal / beast'    },
+    // ── Food & drink ──────────────────────────────────────────────────────────
+    { h: 'לֶחֶם',        t: 'lechem',      m: 'bread'             },
+    { h: 'חָלָב',        t: 'chalav',      m: 'milk'              },
+    { h: 'בֵּיצָה',      t: 'beitzah',     m: 'egg'               },
+    { h: 'בָּשָׂר',      t: 'basar',       m: 'meat / flesh'      },
+    { h: 'דָּגָן',       t: 'dagan',       m: 'grain / cereal'    },
+    { h: 'קֶמַח',        t: 'kemach',      m: 'flour'             },
+    { h: 'מֶלַח',        t: 'melach',      m: 'salt'              },
+    { h: 'סֻכָּר',       t: 'sukar',       m: 'sugar'             },
+    { h: 'פְּרִי',       t: 'pri',         m: 'fruit'             },
+    { h: 'יֶרֶק',        t: 'yerek',       m: 'vegetable'         },
+    { h: 'תַּפּוּחַ',    t: 'tapuach',     m: 'apple'             },
+    { h: 'תֹּמֶר',       t: 'tomer',       m: 'date palm / date'  },
+    { h: 'רִמּוֹן',      t: 'rimon',       m: 'pomegranate'       },
+    { h: 'עֲנָב',        t: 'anav',        m: 'grape'             },
+    { h: 'זַיִת',        t: 'zayit',       m: 'olive'             },
+    { h: 'דְּבַשׁ',      t: 'devash',      m: 'honey'             },
+    { h: 'שֶׁמֶן',       t: 'shemen',      m: 'oil'               },
+    { h: 'יַיִן',        t: 'yayin',       m: 'wine'              },
+    { h: 'מַיִם',        t: 'mayim',       m: 'water'             },
+    { h: 'בָּצָל',       t: 'batzal',      m: 'onion'             },
+    { h: 'שׁוּם',        t: 'shum',        m: 'garlic'            },
+    { h: 'עֻגָה',        t: 'ugah',        m: 'cake'              },
+    // ── Clothing ──────────────────────────────────────────────────────────────
+    { h: 'בֶּגֶד',       t: 'beged',       m: 'garment / clothing'},
+    { h: 'חֻלְצָה',      t: 'chultza',     m: 'shirt'             },
+    { h: 'שִׂמְלָה',     t: 'simlah',      m: 'dress / robe'      },
+    { h: 'מְעִיל',       t: 'meil',        m: 'coat / cloak'      },
+    { h: 'נַעַל',        t: 'naal',        m: 'shoe / sandal'     },
+    { h: 'כּוֹבַע',      t: 'kovah',       m: 'hat'               },
+    { h: 'גֶּרֶב',       t: 'gerev',       m: 'sock / stocking'   },
+    { h: 'חֲגוֹרָה',     t: 'chagorak',    m: 'belt'              },
+    { h: 'טַבַּעַת',     t: 'tabaat',      m: 'ring'              },
+    { h: 'צָמִיד',       t: 'tzamid',      m: 'bracelet'          },
+    // ── Colors ────────────────────────────────────────────────────────────────
+    { h: 'אָדֹם',        t: 'adom',        m: 'red'               },
+    { h: 'כָּחֹל',       t: 'kachol',      m: 'blue'              },
+    { h: 'יָרֹק',        t: 'yarok',       m: 'green'             },
+    { h: 'צָהֹב',        t: 'tzahov',      m: 'yellow'            },
+    { h: 'לָבָן',        t: 'lavan',       m: 'white'             },
+    { h: 'שָׁחֹר',       t: 'shachor',     m: 'black'             },
+    { h: 'כָּתֹם',       t: 'katom',       m: 'orange'            },
+    { h: 'סָגֹל',        t: 'sagol',       m: 'purple'            },
+    { h: 'חוּם',         t: 'chum',        m: 'brown'             },
+    { h: 'אָפֹר',        t: 'afor',        m: 'gray'              },
+    { h: 'וָרֹד',        t: 'varod',       m: 'pink'              },
+    // ── Numbers ───────────────────────────────────────────────────────────────
+    { h: 'אֶחָד',        t: 'echad',       m: 'one'               },
+    { h: 'שְׁנַיִם',     t: 'shnayim',     m: 'two'               },
+    { h: 'שָׁלֹשׁ',      t: 'shalosh',     m: 'three'             },
+    { h: 'אַרְבַּע',     t: 'arba',        m: 'four'              },
+    { h: 'חָמֵשׁ',       t: 'chamesh',     m: 'five'              },
+    { h: 'שֵׁשׁ',        t: 'shesh',       m: 'six'               },
+    { h: 'שֶׁבַע',       t: 'sheva',       m: 'seven'             },
+    { h: 'שְׁמוֹנֶה',    t: 'shmoneh',     m: 'eight'             },
+    { h: 'תֵּשַׁע',      t: 'tesha',       m: 'nine'              },
+    { h: 'עֶשֶׂר',       t: 'eser',        m: 'ten'               },
+    { h: 'מֵאָה',        t: 'meah',        m: 'hundred'           },
+    { h: 'אֶלֶף',        t: 'elef',        m: 'thousand'          },
+    // ── Time ──────────────────────────────────────────────────────────────────
+    { h: 'יוֹם',         t: 'yom',         m: 'day'               },
+    { h: 'לַיְלָה',      t: 'laylah',      m: 'night'             },
+    { h: 'בֹּקֶר',       t: 'boker',       m: 'morning'           },
+    { h: 'עֶרֶב',        t: 'erev',        m: 'evening'           },
+    { h: 'צָהֳרַיִם',    t: 'tzahorayim',  m: 'noon / midday'     },
+    { h: 'שָׁנָה',       t: 'shanah',      m: 'year'              },
+    { h: 'חֹדֶשׁ',       t: 'chodesh',     m: 'month'             },
+    { h: 'שָׁבוּעַ',     t: 'shavua',      m: 'week'              },
+    { h: 'שָׁעָה',       t: 'shaah',       m: 'hour'              },
+    { h: 'רֶגַע',        t: 'rega',        m: 'moment'            },
+    { h: 'זְמַן',        t: 'zman',        m: 'time'              },
+    { h: 'עֵת',          t: 'et',          m: 'time / season'     },
+    { h: 'מָחָר',        t: 'machar',      m: 'tomorrow'          },
+    { h: 'אֶתְמוֹל',     t: 'etmol',       m: 'yesterday'         },
+    { h: 'עַתָּה',       t: 'atah',        m: 'now'               },
+    // ── House & home ──────────────────────────────────────────────────────────
+    { h: 'בַּיִת',       t: 'bayit',       m: 'house'             },
+    { h: 'חֶדֶר',        t: 'cheder',      m: 'room'              },
+    { h: 'מִטְבָּח',     t: 'mitbach',     m: 'kitchen'           },
+    { h: 'מִטָּה',       t: 'mitah',       m: 'bed'               },
+    { h: 'דֶּלֶת',       t: 'delet',       m: 'door'              },
+    { h: 'חַלּוֹן',      t: 'chalon',      m: 'window'            },
+    { h: 'שֻׁלְחָן',     t: 'shulchan',    m: 'table'             },
+    { h: 'כִּסֵּא',      t: 'kise',        m: 'chair'             },
+    { h: 'קִיר',         t: 'kir',         m: 'wall'              },
+    { h: 'רִצְפָּה',     t: 'ritzpah',     m: 'floor'             },
+    { h: 'תִּקְרָה',     t: 'tikrah',      m: 'ceiling'           },
+    { h: 'גַּג',         t: 'gag',         m: 'roof'              },
+    { h: 'שַׁעַר',       t: 'shaar',       m: 'gate / entrance'   },
+    { h: 'חָצֵר',        t: 'chatzer',     m: 'yard / courtyard'  },
+    { h: 'מַדְרֵגָה',    t: 'madregah',    m: 'stair / step'      },
+    { h: 'נֵר',          t: 'ner',         m: 'candle'            },
+    { h: 'מַפְתֵּחַ',    t: 'mafteyach',   m: 'key'               },
+    { h: 'אָרוֹן',       t: 'aron',        m: 'closet / ark'      },
+    // ── School & learning ─────────────────────────────────────────────────────
+    { h: 'סֵפֶר',        t: 'sefer',       m: 'book'              },
+    { h: 'עֵט',          t: 'et',          m: 'pen'               },
+    { h: 'עִפָּרוֹן',    t: 'iparon',      m: 'pencil'            },
+    { h: 'מַחְבֶּרֶת',   t: 'machberet',   m: 'notebook'          },
+    { h: 'לוּחַ',        t: 'luach',       m: 'board / tablet'    },
+    { h: 'תִּיק',        t: 'tik',         m: 'bag / backpack'    },
+    { h: 'מִלּוֹן',      t: 'milon',       m: 'dictionary'        },
+    { h: 'מוֹרֶה',       t: 'moreh',       m: 'teacher (m)'       },
+    { h: 'מוֹרָה',       t: 'morah',       m: 'teacher (f)'       },
+    { h: 'תַּלְמִיד',    t: 'talmid',      m: 'student (m)'       },
+    { h: 'תַּלְמִידָה',  t: 'talmidah',    m: 'student (f)'       },
+    { h: 'כִּתָּה',      t: 'kitah',       m: 'class / grade'     },
+    { h: 'שִׁיעוּר',     t: 'shiur',       m: 'lesson'            },
+    { h: 'לִמּוּד',      t: 'limmud',      m: 'learning / study'  },
+    { h: 'מִלָּה',       t: 'milah',       m: 'word'              },
+    { h: 'שְׁאֵלָה',     t: 'sheelah',     m: 'question'          },
+    { h: 'תְּשׁוּבָה',   t: 'teshuva',     m: 'answer / return'   },
+    // ── Places & buildings ────────────────────────────────────────────────────
+    { h: 'עִיר',         t: 'ir',          m: 'city'              },
+    { h: 'כְּפָר',       t: 'kfar',        m: 'village'           },
+    { h: 'רְחוֹב',       t: 'rechov',      m: 'street'            },
+    { h: 'דֶּרֶךְ',      t: 'derech',      m: 'road / way'        },
+    { h: 'כְּבִישׁ',     t: 'kvish',       m: 'highway / road'    },
+    { h: 'גֶּשֶׁר',      t: 'gesher',      m: 'bridge'            },
+    { h: 'מָקוֹם',       t: 'makom',       m: 'place'             },
+    { h: 'מִגְדָּל',     t: 'migdal',      m: 'tower'             },
+    { h: 'הֵיכָל',       t: 'heichal',     m: 'palace / temple'   },
+    { h: 'אַרְמוֹן',     t: 'armon',       m: 'palace'            },
+    { h: 'שׁוּק',        t: 'shuk',        m: 'market'            },
+    { h: 'חֲנוּת',       t: 'chanut',      m: 'store / shop'      },
+    { h: 'תַּחֲנָה',     t: 'tachanah',    m: 'station / stop'    },
+    // ── Transport ─────────────────────────────────────────────────────────────
+    { h: 'מְכוֹנִית',    t: 'mechonit',    m: 'car'               },
+    { h: 'אוֹטוֹבּוּס',  t: 'otobus',      m: 'bus'               },
+    { h: 'רַכֶּבֶת',     t: 'rakevet',     m: 'train'             },
+    { h: 'אֳנִיָּה',     t: 'oniyah',      m: 'ship / boat'       },
+    { h: 'מָטוֹס',       t: 'matos',       m: 'airplane'          },
+    { h: 'אוֹפַנַּיִם',  t: 'ofanayim',    m: 'bicycle'           },
+    // ── Adjectives ────────────────────────────────────────────────────────────
+    { h: 'טוֹב',         t: 'tov',         m: 'good'              },
+    { h: 'רַע',          t: 'ra',          m: 'bad / evil'        },
+    { h: 'גָּדוֹל',      t: 'gadol',       m: 'big / great'       },
+    { h: 'קָטָן',        t: 'katan',       m: 'small'             },
+    { h: 'חָדָשׁ',       t: 'chadash',     m: 'new'               },
+    { h: 'יָשָׁן',       t: 'yashan',      m: 'old'               },
+    { h: 'יָפֶה',        t: 'yafeh',       m: 'beautiful'         },
+    { h: 'חָזָק',        t: 'chazak',      m: 'strong'            },
+    { h: 'חַלָּשׁ',      t: 'chalash',     m: 'weak'              },
+    { h: 'מָהִיר',       t: 'mahir',       m: 'fast / quick'      },
+    { h: 'אִטִּי',       t: 'iti',         m: 'slow'              },
+    { h: 'גָּבוֹהַּ',    t: 'gavoah',      m: 'tall / high'       },
+    { h: 'נָמוּךְ',      t: 'namuch',      m: 'short / low'       },
+    { h: 'רָחָב',        t: 'rachav',      m: 'wide / broad'      },
+    { h: 'צַר',          t: 'tzar',        m: 'narrow'            },
+    { h: 'כָּבֵד',       t: 'kaved',       m: 'heavy'             },
+    { h: 'קַל',          t: 'kal',         m: 'light / easy'      },
+    { h: 'חַם',          t: 'cham',        m: 'hot / warm'        },
+    { h: 'קַר',          t: 'kar',         m: 'cold'              },
+    { h: 'חַי',          t: 'chai',        m: 'alive / living'    },
+    { h: 'יָשָׁר',       t: 'yashar',      m: 'straight / honest' },
+    { h: 'עָמֹק',        t: 'amok',        m: 'deep'              },
+    { h: 'רָם',          t: 'ram',         m: 'high / exalted'    },
+    // ── Abstract & emotion ────────────────────────────────────────────────────
+    { h: 'שָׁלוֹם',      t: 'shalom',      m: 'peace / hello'     },
+    { h: 'אַהֲבָה',      t: 'ahavah',      m: 'love'              },
+    { h: 'שִׂמְחָה',     t: 'simchah',     m: 'joy'               },
+    { h: 'תִּקְוָה',     t: 'tikvah',      m: 'hope'              },
+    { h: 'אֱמֶת',        t: 'emet',        m: 'truth'             },
+    { h: 'שֶׁקֶר',       t: 'sheker',      m: 'lie / falsehood'   },
+    { h: 'פַּחַד',       t: 'pachad',      m: 'fear'              },
+    { h: 'שִׂנְאָה',     t: 'sinah',       m: 'hatred'            },
+    { h: 'עֶצֶב',        t: 'etzev',       m: 'sadness'           },
+    { h: 'כַּעַס',       t: 'kaas',        m: 'anger'             },
+    { h: 'קִנְאָה',      t: 'kinah',       m: 'jealousy / zeal'   },
+    { h: 'גַּאֲוָה',     t: 'gaavah',      m: 'pride'             },
+    { h: 'בּוּשָׁה',     t: 'bushah',      m: 'shame'             },
+    { h: 'חֵרוּת',       t: 'cherut',      m: 'freedom'           },
+    { h: 'אֱמוּנָה',     t: 'emunah',      m: 'faith / belief'    },
+    { h: 'כָּבוֹד',      t: 'kavod',       m: 'honor / glory'     },
+    { h: 'חָכְמָה',      t: 'chochmah',    m: 'wisdom'            },
+    { h: 'בִּינָה',      t: 'binah',       m: 'understanding'     },
+    { h: 'דַּעַת',       t: 'daat',        m: 'knowledge'         },
+    { h: 'רַעְיוֹן',     t: 'rayon',       m: 'idea / thought'    },
+    { h: 'חֲלוֹם',       t: 'chalom',      m: 'dream'             },
+    { h: 'קוֹל',         t: 'kol',         m: 'voice / sound'     },
+    { h: 'שֶׁקֶט',       t: 'sheket',      m: 'silence / quiet'   },
+    { h: 'רַעַשׁ',       t: 'raash',       m: 'noise'             },
+    { h: 'יֹפִי',        t: 'yofi',        m: 'beauty'            },
+    { h: 'כֹּחַ',        t: 'koach',       m: 'strength / power'  },
+    // ── Faith & culture ───────────────────────────────────────────────────────
+    { h: 'שַׁבָּת',      t: 'shabbat',     m: 'Sabbath'           },
+    { h: 'תּוֹרָה',      t: 'torah',       m: 'Torah / law'       },
+    { h: 'בְּרִית',      t: 'brit',        m: 'covenant'          },
+    { h: 'מִצְוָה',      t: 'mitzvah',     m: 'commandment'       },
+    { h: 'תְּפִלָּה',    t: 'tefillah',    m: 'prayer'            },
+    { h: 'בְּרָכָה',     t: 'brachah',     m: 'blessing'          },
+    { h: 'חַג',          t: 'chag',        m: 'holiday / festival'},
+    { h: 'פֶּסַח',       t: 'pesach',      m: 'Passover'          },
+    { h: 'סֻכָּה',       t: 'sukkah',      m: 'booth / hut'       },
+    { h: 'מְנוֹרָה',     t: 'menorah',     m: 'menorah / lamp'    },
+    { h: 'מַלְאָךְ',     t: 'malach',      m: 'angel / messenger' },
+    { h: 'קֹדֶשׁ',       t: 'kodesh',      m: 'holiness'          },
+    { h: 'כּוֹהֵן',      t: 'kohen',       m: 'priest'            },
+    { h: 'נָבִיא',       t: 'navi',        m: 'prophet'           },
+    { h: 'מִזְבֵּחַ',    t: 'mizbeach',    m: 'altar'             },
+    { h: 'קָרְבָּן',     t: 'korban',      m: 'offering / sacrifice'},
+    { h: 'אֱלֹהִים',     t: 'elohim',      m: 'God'               },
+    // ── People & society ──────────────────────────────────────────────────────
+    { h: 'מֶלֶךְ',       t: 'melech',      m: 'king'              },
+    { h: 'מַלְכָּה',     t: 'malkah',      m: 'queen'             },
+    { h: 'שַׂר',         t: 'sar',         m: 'minister / prince' },
+    { h: 'שׁוֹפֵט',      t: 'shofet',      m: 'judge'             },
+    { h: 'חַיָּל',       t: 'chayal',      m: 'soldier'           },
+    { h: 'רוֹפֵא',       t: 'rofeh',       m: 'doctor'            },
+    { h: 'עַם',          t: 'am',          m: 'people / nation'   },
+    { h: 'מִשְׁפָּחָה',  t: 'mishpachah',  m: 'family'            },
+    { h: 'שֵׁם',         t: 'shem',        m: 'name'              },
+    // ── Objects & tools ───────────────────────────────────────────────────────
+    { h: 'כֶּלִי',       t: 'keli',        m: 'vessel / tool'     },
+    { h: 'חֶרֶב',        t: 'cherev',      m: 'sword'             },
+    { h: 'קֶשֶׁת',       t: 'keshet',      m: 'bow / rainbow'     },
+    { h: 'מָגֵן',        t: 'magen',       m: 'shield'            },
+    { h: 'כּוֹס',        t: 'kos',         m: 'cup'               },
+    { h: 'צַלַּחַת',     t: 'tzalachat',   m: 'plate / dish'      },
+    { h: 'סַכִּין',      t: 'sakin',       m: 'knife'             },
+    { h: 'כַּף',         t: 'kaf',         m: 'spoon / palm'      },
+    { h: 'מַתָּנָה',     t: 'matanah',     m: 'gift'              },
+    { h: 'מִכְתָּב',     t: 'michtav',     m: 'letter / document' },
+    { h: 'בַּרְזֶל',     t: 'barzel',      m: 'iron'              },
+    { h: 'נְחֹשֶׁת',     t: 'nechoshet',   m: 'copper / bronze'   },
+    { h: 'כֶּסֶף',       t: 'kesef',       m: 'silver / money'    },
+    { h: 'זָהָב',        t: 'zahav',       m: 'gold'              },
+    { h: 'אֵשׁ',         t: 'esh',         m: 'fire'              },
+    // ── Nature 2 ──────────────────────────────────────────────────────────────
+    { h: 'חַיִּים',      t: 'chayim',      m: 'life'              },
+    { h: 'מָוֶת',        t: 'mavet',       m: 'death'             },
+    { h: 'שָׁלוֹם',      t: 'shalom',      m: 'peace / wholeness' },
+    { h: 'מִלְחָמָה',    t: 'milchamah',   m: 'war'               },
+    { h: 'נֵס',          t: 'nes',         m: 'miracle / flag'    },
+    { h: 'פֶּלֶא',       t: 'pele',        m: 'wonder'            },
+    { h: 'אוֹת',         t: 'ot',          m: 'sign / letter'     },
+    { h: 'דֶּגֶל',       t: 'degel',       m: 'flag'              },
+    { h: 'גְּבוּל',      t: 'gevul',       m: 'border / boundary' },
+    { h: 'צֶדֶק',        t: 'tzedek',      m: 'justice'           },
+    { h: 'חֹק',          t: 'chok',        m: 'law / rule'        },
+    { h: 'מִשְׁפָּט',    t: 'mishpat',     m: 'judgment / law'    },
+    { h: 'שָׂכָר',       t: 'sachar',      m: 'reward / wage'     },
+    { h: 'עֹנֶשׁ',       t: 'onesh',       m: 'punishment'        },
+    // ── Verbs as infinitives ──────────────────────────────────────────────────
+    { h: 'לֶאֱכֹל',      t: 'leechol',     m: 'to eat'            },
+    { h: 'לִשְׁתּוֹת',   t: 'lishtot',     m: 'to drink'          },
+    { h: 'לִישׁוֹן',     t: 'lishon',      m: 'to sleep'          },
+    { h: 'לָלֶכֶת',      t: 'lalechet',    m: 'to go / walk'      },
+    { h: 'לָבוֹא',       t: 'lavo',        m: 'to come'           },
+    { h: 'לִרְאוֹת',     t: 'lirot',       m: 'to see'            },
+    { h: 'לִשְׁמֹעַ',    t: 'lishmoa',     m: 'to hear'           },
+    { h: 'לְדַבֵּר',     t: 'ledaber',     m: 'to speak'          },
+    { h: 'לִכְתֹּב',     t: 'lichtov',     m: 'to write'          },
+    { h: 'לִקְרֹא',      t: 'likro',       m: 'to read / call'    },
+    { h: 'לָשִׁיר',      t: 'lashir',      m: 'to sing'           },
+    { h: 'לִתֵּן',       t: 'liten',       m: 'to give'           },
+    { h: 'לָקַחַת',      t: 'lakachat',    m: 'to take'           },
+    { h: 'לַעֲשׂוֹת',    t: 'laasot',      m: 'to do / make'      },
+    { h: 'לִהְיוֹת',     t: 'lihyot',      m: 'to be'             },
+    { h: 'לֵדַעַת',      t: 'ledaat',      m: 'to know'           },
+    { h: 'לִרְצוֹת',     t: 'lirtzot',     m: 'to want'           },
+    { h: 'לָרוּץ',       t: 'larutz',      m: 'to run'            },
+    { h: 'לִפְתֹּחַ',    t: 'liftoach',    m: 'to open'           },
+    { h: 'לִסְגֹּר',     t: 'lisgor',      m: 'to close'          },
+    { h: 'לַעֲמֹד',      t: 'laamod',      m: 'to stand'          },
+    { h: 'לָשֶׁבֶת',     t: 'lashevet',    m: 'to sit'            },
+    { h: 'לִבְכּוֹת',    t: 'livkot',      m: 'to cry'            },
+    { h: 'לִצְחֹק',      t: 'litzchoq',    m: 'to laugh'          },
+    { h: 'לֶאֱהֹב',      t: 'leehov',      m: 'to love'           },
+    // ── Misc common ───────────────────────────────────────────────────────────
+    { h: 'שִׁיר',        t: 'shir',        m: 'song'              },
+    { h: 'עֲבוֹדָה',     t: 'avodah',      m: 'work / worship'    },
+    { h: 'מִשְׂחָק',     t: 'mischaak',    m: 'game'              },
+    { h: 'מְלָאכָה',     t: 'melachah',    m: 'craft / work'      },
+    { h: 'אֹכֶל',        t: 'ochel',       m: 'food'              },
+    { h: 'מִסְפָּר',     t: 'mispar',      m: 'number'            },
+    { h: 'צֶבַע',        t: 'tzeva',       m: 'color / paint'     },
+    { h: 'חֶסֶד',        t: 'chesed',      m: 'kindness / mercy'  },
+    { h: 'שִׁיר',        t: 'shir',        m: 'poem / song'       },
+    // ── More words ────────────────────────────────────────────────────────────
+    { h: 'כָּרִית',      t: 'karit',       m: 'pillow / cushion'  },
+    { h: 'שְׁבִיל',      t: 'shvil',       m: 'path / trail'      },
+    { h: 'בּוֹר',        t: 'bor',         m: 'pit / cistern'     },
+    { h: 'תְּהוֹם',      t: 'tehom',       m: 'deep / abyss'      },
+    { h: 'שֹׁרֶשׁ',      t: 'shoresh',     m: 'root'              },
+    { h: 'עָנָף',        t: 'anaf',        m: 'branch'            },
+    { h: 'פֵּרִי',       t: 'peri',        m: 'fruit / produce'   },
+    { h: 'זֶרַע',        t: 'zera',        m: 'seed / offspring'  },
+    { h: 'אֶרֶז',        t: 'erez',        m: 'cedar tree'        },
+    { h: 'תֵּמָר',       t: 'tamar',       m: 'date palm'         },
+    { h: 'עֵצָה',        t: 'etzah',       m: 'advice / counsel'  },
+    { h: 'חֵשְׁבּוֹן',   t: 'cheshbon',    m: 'account / math'    },
+    { h: 'רֹב',          t: 'rov',         m: 'majority / much'   },
+    { h: 'מְעַט',        t: 'meat',        m: 'few / little'      },
+    { h: 'כֹּל',         t: 'kol',         m: 'all / every'       },
+    { h: 'אַחַד',        t: 'achad',       m: 'one / united'      },
+    { h: 'יַחַד',        t: 'yachad',      m: 'together'          },
+    { h: 'לֵב',          t: 'lev',         m: 'heart / mind'      },
+    { h: 'נֶפֶשׁ',       t: 'nefesh',      m: 'soul / being'      },
+    { h: 'רוּחַ',        t: 'ruach',       m: 'spirit / breath'   },
+    { h: 'בָּשָׂר',      t: 'basar',       m: 'flesh / body'      },
+    { h: 'עֹלָם',        t: 'olam',        m: 'world / eternity'  },
+    { h: 'דּוֹר',        t: 'dor',         m: 'generation'        },
+    { h: 'זֵכֶר',        t: 'zecher',      m: 'memory / memorial' },
+    { h: 'שָׁלִישׁ',     t: 'shalish',     m: 'third / officer'   },
+];
+
+// ── Voice ────────────────────────────────────────────────────────────────────
+
+function loadVoices() {
+    heVoice = speechSynthesis.getVoices().find(v => v.lang.startsWith('he')) || null;
+}
+speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+
+function speak(text) {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'he-IL';
+    u.rate = 0.72;
+    if (heVoice) u.voice = heVoice;
+    speechSynthesis.speak(u);
+}
+
+// ── Build letter toggles ─────────────────────────────────────────────────────
+
+const letterTogglesEl = document.getElementById('letterToggles');
+LETTERS.forEach((l, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'toggle-letter selected';
+    const altForms = l.forms.length > 1
+        ? `<span class="tl-sofit"> / ${l.forms.slice(1).join('/')}</span>`
+        : '';
+    btn.innerHTML = `<span class="tl-heb">${l.forms[0]}${altForms}</span><span class="tl-name">${l.name}</span>`;
+    btn.addEventListener('click', () => {
+        const on = btn.classList.toggle('selected');
+        on ? selectedLetters.add(i) : selectedLetters.delete(i);
+    });
+    letterTogglesEl.appendChild(btn);
+});
+
+document.getElementById('allLetters').addEventListener('click', () => {
+    selectedLetters = new Set(LETTERS.map((_, i) => i));
+    letterTogglesEl.querySelectorAll('.toggle-letter').forEach(b => b.classList.add('selected'));
+});
+document.getElementById('noneLetters').addEventListener('click', () => {
+    selectedLetters = new Set();
+    letterTogglesEl.querySelectorAll('.toggle-letter').forEach(b => b.classList.remove('selected'));
+});
+
+// ── Build vowel toggles ──────────────────────────────────────────────────────
+
+const vowelTogglesEl = document.getElementById('vowelToggles');
+VOWELS.forEach((v, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'toggle-vowel selected';
+    btn.innerHTML = `
+        <span class="tv-glyph">${v.glyph}</span>
+        <span>
+            <span class="tv-name">${v.name}</span>
+            <span class="tv-sound">${v.sound}</span>
+        </span>`;
+    btn.addEventListener('click', () => {
+        const on = btn.classList.toggle('selected');
+        on ? selectedVowels.add(i) : selectedVowels.delete(i);
+    });
+    vowelTogglesEl.appendChild(btn);
+});
+
+document.getElementById('allVowels').addEventListener('click', () => {
+    selectedVowels = new Set(VOWELS.map((_, i) => i));
+    vowelTogglesEl.querySelectorAll('.toggle-vowel').forEach(b => b.classList.add('selected'));
+});
+document.getElementById('noneVowels').addEventListener('click', () => {
+    selectedVowels = new Set();
+    vowelTogglesEl.querySelectorAll('.toggle-vowel').forEach(b => b.classList.remove('selected'));
+});
+
+// ── Word length pills ────────────────────────────────────────────────────────
+
+function makePillGroup(containerId, onChange) {
+    const container = document.getElementById(containerId);
+    container.querySelectorAll('.pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+            container.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            onChange(pill);
+        });
+    });
+}
+
+makePillGroup('lengthPills', pill => {
+    const val = pill.dataset.val;
+    wordLength = (val === 'words') ? 'words' : parseInt(val);
+    const isWords = (val === 'words');
+    document.getElementById('finalFormsRow').style.display = isWords ? 'none' : '';
+    document.getElementById('generateBtn').textContent = isWords ? 'Find Words' : 'Generate Words';
+});
+
+// ── Word count stepper ───────────────────────────────────────────────────────
+
+function refreshStepper() {
+    document.getElementById('countVal').textContent = wordCount;
+    document.getElementById('countDown').disabled = wordCount <= 1;
+    document.getElementById('countUp').disabled   = wordCount >= 10;
+}
+document.getElementById('countDown').addEventListener('click', () => { wordCount = Math.max(1,  wordCount - 1); refreshStepper(); });
+document.getElementById('countUp').addEventListener('click',   () => { wordCount = Math.min(10, wordCount + 1); refreshStepper(); });
+refreshStepper();
+
+document.getElementById('finalFormsToggle').addEventListener('change', function() {
+    useFinalForms = this.checked;
+});
+
+// ── Generate ─────────────────────────────────────────────────────────────────
+
+document.getElementById('generateBtn').addEventListener('click', generate);
+
+function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// Returns the set of base Hebrew consonant characters the teacher has enabled
+function getKnownConsonants() {
+    const known = new Set();
+    for (const i of selectedLetters) {
+        for (const form of LETTERS[i].forms) {
+            const base = [...form].find(c => c >= 'א' && c <= 'ת');
+            if (base) known.add(base);
+        }
+    }
+    return known;
+}
+
+function generate() {
+    if (wordLength === 'words') { generateRealWords(); return; }
+
+    const availLetters = LETTERS.filter((_, i) => selectedLetters.has(i));
+    const availVowels  = VOWELS.filter((_, i) => selectedVowels.has(i));
+
+    if (availLetters.length === 0) { showError('Please select at least one letter.'); return; }
+    if (availVowels.length  === 0) { showError('Please select at least one vowel.');  return; }
+
+    const PATACH = VOWELS.find(v => v.name === 'Patach');
+
+    const words = Array.from({ length: wordCount }, () => {
+        const syllables = Array.from({ length: wordLength }, (_, pos) => {
+            const isLast = pos === wordLength - 1;
+            const letter = availLetters[Math.floor(Math.random() * availLetters.length)];
+            const vowel  = pickVowelForLetter(letter, availVowels);
+            const useSofit = isLast && useFinalForms && letter.forms.length > 1;
+            const form = useSofit ? letter.forms[1] : letter.forms[0];
+            return { letter, vowel, form };
+        });
+
+        // Furtive patach: guttural at word-end carrying a long vowel → use patach
+        if (PATACH) {
+            const last = syllables[syllables.length - 1];
+            if (GUTTURALS.has(last.form) && isLongVowel(last.vowel.symbol)) {
+                last.vowel = PATACH;
+            }
+        }
+
+        return { syllables };
+    });
+
+    renderWords(words);
+}
+
+function generateRealWords() {
+    const known = getKnownConsonants();
+    const matches = WORD_DICT.filter(w => {
+        const consonants = [...w.h].filter(c => c >= 'א' && c <= 'ת');
+        return consonants.every(c => known.has(c));
+    });
+
+    if (matches.length === 0) {
+        showError('No words match your selected letters. Try selecting more letters.');
+        return;
+    }
+
+    const shuffled = [...matches].sort(() => Math.random() - 0.5);
+    renderRealWords(shuffled.slice(0, Math.min(wordCount, shuffled.length)));
+}
+
+function renderWords(words) {
+    document.getElementById('outputLabel').textContent = 'Generated Words';
+    const grid = document.getElementById('wordGrid');
+    grid.innerHTML = '';
+
+    words.forEach(({ syllables }, i) => {
+        const hebParts    = syllables.map(s => s.form + s.vowel.symbol);
+        const translParts = syllables.map(s => (s.letter.translit || '') + s.vowel.translit);
+
+        const hebrew   = hebParts.join('');
+        const translit = translParts.join('·');
+
+        const card = document.createElement('div');
+        card.className = 'word-card';
+        card.innerHTML = `
+            <div class="word-number">${i + 1}</div>
+            <div class="word-hebrew">${hebrew}</div>
+            <div class="word-translit">${translit}</div>
+            <button class="word-play" title="Hear this word">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M8 5v14l11-7z"/></svg>
+            </button>`;
+
+        function playWord() {
+            document.querySelectorAll('.word-card').forEach(c => c.classList.remove('playing'));
+            card.classList.add('playing');
+            speak(hebrew);
+            setTimeout(() => card.classList.remove('playing'), 1400);
+        }
+
+        card.querySelector('.word-play').addEventListener('click', e => { e.stopPropagation(); playWord(); });
+        card.addEventListener('click', playWord);
+        grid.appendChild(card);
+    });
+
+    const out = document.getElementById('outputCard');
+    out.style.display = 'block';
+    setTimeout(() => out.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+}
+
+function renderRealWords(words) {
+    document.getElementById('outputLabel').textContent = 'Real Hebrew Words';
+    const grid = document.getElementById('wordGrid');
+    grid.innerHTML = '';
+
+    words.forEach(({ h, t, m }, i) => {
+        const card = document.createElement('div');
+        card.className = 'word-card';
+        card.innerHTML = `
+            <div class="word-number">${i + 1}</div>
+            <div class="word-hebrew">${h}</div>
+            <div class="word-translit">${t}</div>
+            <div class="word-meaning">${m}</div>
+            <button class="word-play" title="Hear this word">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M8 5v14l11-7z"/></svg>
+            </button>`;
+
+        function playWord() {
+            document.querySelectorAll('.word-card').forEach(c => c.classList.remove('playing'));
+            card.classList.add('playing');
+            speak(h);
+            setTimeout(() => card.classList.remove('playing'), 1400);
+        }
+
+        card.querySelector('.word-play').addEventListener('click', e => { e.stopPropagation(); playWord(); });
+        card.addEventListener('click', playWord);
+        grid.appendChild(card);
+    });
+
+    const out = document.getElementById('outputCard');
+    out.style.display = 'block';
+    setTimeout(() => out.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+}
+</script>
+</body>
+</html>

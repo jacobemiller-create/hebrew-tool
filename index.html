@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Hebrew — Letters</title>
+    <style>
+        :root {
+            --blue: #1a4b8c;
+            --blue-mid: #2d6cc0;
+            --blue-light: #e8f0fc;
+            --gold: #b8922a;
+            --bg: #f4f1ea;
+            --card: #ffffff;
+            --text: #1a1a2e;
+            --muted: #6b7280;
+            --border: #e2e8f0;
+            --shadow: 0 2px 12px rgba(0,0,0,0.08);
+            --shadow-hover: 0 6px 20px rgba(26,75,140,0.18);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── Nav ── */
+        nav {
+            background: #0f3266;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.65);
+            text-decoration: none;
+            padding: 11px 22px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.15s;
+            letter-spacing: 0.3px;
+        }
+        .nav-link:hover { color: white; }
+        .nav-link.active {
+            color: white;
+            border-bottom-color: #c9a84c;
+        }
+
+        /* ── Header ── */
+        header {
+            background: var(--blue);
+            color: white;
+            text-align: center;
+            padding: 24px 20px 20px;
+        }
+        header .heb-title {
+            font-size: 2rem;
+            font-family: 'Times New Roman', Georgia, serif;
+            direction: rtl;
+            letter-spacing: 4px;
+            line-height: 1;
+        }
+        header h1 {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-top: 6px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        @media print {
+            nav { display: none; }
+        }
+
+        /* ── Layout ── */
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 28px 18px 48px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 22px 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 14px;
+        }
+
+        /* ── Voice warning ── */
+        .voice-warning {
+            display: none;
+            background: #fffbeb;
+            border: 1px solid #f59e0b;
+            border-radius: 10px;
+            padding: 11px 16px;
+            font-size: 0.85rem;
+            color: #92400e;
+        }
+
+        /* ── Display panel ── */
+        .display-panel {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+        }
+        .big-letter {
+            font-size: 110px;
+            font-family: 'Times New Roman', Georgia, serif;
+            color: var(--blue);
+            direction: rtl;
+            line-height: 1;
+            min-width: 130px;
+            text-align: center;
+            user-select: none;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        .big-letter:active { transform: scale(0.93); }
+        .big-letter.playing {
+            animation: pulse 0.4s ease;
+        }
+        @keyframes pulse {
+            0%   { transform: scale(1); }
+            40%  { transform: scale(1.08); color: var(--blue-mid); }
+            100% { transform: scale(1); }
+        }
+        .display-info { flex: 1; }
+        .display-info .letter-name {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--blue);
+            line-height: 1.1;
+        }
+        .display-info .vowel-tag {
+            display: inline-block;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-top: 8px;
+        }
+        .display-info .sound-desc {
+            font-size: 1rem;
+            color: var(--muted);
+            margin-top: 6px;
+            font-style: italic;
+        }
+        .play-btn {
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--blue);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .play-btn:hover { background: var(--blue-mid); }
+        .play-btn svg { width: 16px; height: 16px; fill: white; }
+        .hint {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-top: 10px;
+        }
+
+        /* ── Vowel selector ── */
+        .vowel-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+        }
+        .vowel-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.14s ease;
+            min-width: 76px;
+            gap: 2px;
+        }
+        .vowel-btn:hover {
+            border-color: var(--blue-mid);
+            background: var(--blue-light);
+        }
+        .vowel-btn.selected {
+            border-color: var(--blue);
+            background: var(--blue-light);
+        }
+        .vowel-btn .v-glyph {
+            font-size: 30px;
+            font-family: 'Times New Roman', Georgia, serif;
+            direction: rtl;
+            color: var(--blue);
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .vowel-btn .v-name {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #444;
+        }
+        .vowel-btn .v-sound {
+            font-size: 0.65rem;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        /* ── Alphabet grid ── */
+        .letter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+            gap: 10px;
+            direction: rtl;
+        }
+        .letter-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 13px 8px 10px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.14s ease;
+            user-select: none;
+        }
+        .letter-btn:hover {
+            border-color: var(--blue-mid);
+            background: var(--blue-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+        .letter-btn.selected {
+            border-color: var(--blue);
+            background: var(--blue-light);
+        }
+        .letter-btn .l-heb {
+            font-size: 34px;
+            font-family: 'Times New Roman', Georgia, serif;
+            color: var(--blue);
+            line-height: 1.15;
+        }
+        .letter-btn .l-name {
+            font-size: 0.62rem;
+            color: #555;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        .letter-btn .l-translit {
+            font-size: 0.58rem;
+            color: #aaa;
+            font-style: italic;
+        }
+        .letter-btn .l-sofit {
+            font-size: 0.72em;
+            opacity: 0.55;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 560px) {
+            .display-panel { flex-direction: column; text-align: center; gap: 16px; }
+            .big-letter { min-width: unset; }
+            .play-btn { margin: 12px auto 0; }
+            .hint { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="heb-title">אָלֶף־בֵּית</div>
+    <h1>Learn Hebrew</h1>
+</header>
+
+<nav>
+    <a href="index.html" class="nav-link active">Letters</a>
+    <a href="generator.html" class="nav-link">Word Generator</a>
+</nav>
+
+<div class="container">
+
+    <div class="voice-warning" id="voiceWarning">
+        No Hebrew voice detected on your device. Audio will use a default voice — it may not sound correct.
+        Install a Hebrew voice in System Settings &rarr; Accessibility &rarr; Spoken Content for best results.
+    </div>
+
+    <!-- Display panel -->
+    <div class="card">
+        <div class="display-panel">
+            <div class="big-letter" id="bigLetter" title="Click to hear">א</div>
+            <div class="display-info">
+                <div class="letter-name" id="letterName">Aleph</div>
+                <div class="vowel-tag" id="vowelTag">Kamatz · "ah"</div>
+                <div class="sound-desc" id="soundDesc">as in "father"</div>
+                <button class="play-btn" id="playBtn">
+                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    Hear it
+                </button>
+                <div class="hint" id="hint">Click any letter below, or press the button to hear it</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vowel selector -->
+    <div class="card">
+        <div class="section-label">Vowel (Nikud)</div>
+        <div class="vowel-grid" id="vowelGrid"></div>
+    </div>
+
+    <!-- Alphabet -->
+    <div class="card">
+        <div class="section-label">Hebrew Alphabet — click a letter to hear it</div>
+        <div class="letter-grid" id="letterGrid"></div>
+    </div>
+
+</div>
+
+<script>
+// forms[0] = primary display/TTS form; remaining forms = alternate shapes (same sound)
+const LETTERS = [
+    { forms: ['א'],         name: 'Aleph',  translit: '—'  },
+    { forms: ['בּ'],        name: 'Bet',    translit: 'b'  },
+    { forms: ['ב'],         name: 'Vet',    translit: 'v'  },
+    { forms: ['ג'],         name: 'Gimel',  translit: 'g'  },
+    { forms: ['ד'],         name: 'Dalet',  translit: 'd'  },
+    { forms: ['ה'],         name: 'He',     translit: 'h'  },
+    { forms: ['ו'],         name: 'Vav',    translit: 'v'  },
+    { forms: ['ז'],         name: 'Zayin',  translit: 'z'  },
+    { forms: ['ח'],         name: 'Chet',   translit: 'ch' },
+    { forms: ['ט'],         name: 'Tet',    translit: 't'  },
+    { forms: ['י'],         name: 'Yod',    translit: 'y'  },
+    { forms: ['כּ'],        name: 'Kaf',    translit: 'k'  },
+    { forms: ['כ', 'ך'],   name: 'Chaf',   translit: 'ch' },
+    { forms: ['ל'],         name: 'Lamed',  translit: 'l'  },
+    { forms: ['מ', 'ם'],   name: 'Mem',    translit: 'm'  },
+    { forms: ['נ', 'ן'],   name: 'Nun',    translit: 'n'  },
+    { forms: ['ס'],         name: 'Samech', translit: 's'  },
+    { forms: ['ע'],         name: 'Ayin',   translit: '—'  },
+    { forms: ['פּ'],        name: 'Pe',     translit: 'p'  },
+    { forms: ['פ', 'ף'],   name: 'Fe',     translit: 'f'  },
+    { forms: ['צ', 'ץ'],   name: 'Tsadi',  translit: 'ts' },
+    { forms: ['ק'],         name: 'Qof',    translit: 'k'  },
+    { forms: ['ר'],         name: 'Resh',   translit: 'r'  },
+    { forms: ['שׁ'],        name: 'Shin',   translit: 'sh' },
+    { forms: ['שׂ'],        name: 'Sin',    translit: 's'  },
+    { forms: ['ת'],         name: 'Tav',    translit: 't'  },
+];
+
+const VOWELS = [
+    { name: 'Kamatz',     symbol: 'ָ',  sound: '"ah"', desc: 'as in "father"'  },
+    { name: 'Patach',     symbol: 'ַ',  sound: '"ah"', desc: 'as in "hat"'     },
+    { name: 'Segol',      symbol: 'ֶ',  sound: '"eh"', desc: 'as in "bed"'     },
+    { name: 'Tsere',      symbol: 'ֵ',  sound: '"ay"', desc: 'as in "they"'    },
+    { name: 'Hirik',      symbol: 'ִ',  sound: '"ee"', desc: 'as in "feet"'    },
+    { name: 'Holam',      symbol: 'ֹ',  sound: '"oh"', desc: 'as in "go"'      },
+    { name: 'Holam Male', symbol: 'וֹ', sound: '"oh"', desc: 'vav · as in "go"'   },
+    { name: 'Kubutz',     symbol: 'ֻ',  sound: '"oo"', desc: 'as in "flute"'   },
+    { name: 'Shuruk',     symbol: 'וּ', sound: '"oo"', desc: 'vav · as in "flute"' },
+    { name: 'Shva',       symbol: 'ְ',  sound: '"ə"',  desc: 'short or silent' },
+];
+
+let selLetter = 0;
+let selVowel  = 0;
+let heVoice   = null;
+
+// ── Voice init ──────────────────────────────────────────────────────────────
+
+function loadVoices() {
+    const voices = speechSynthesis.getVoices();
+    heVoice = voices.find(v => v.lang.startsWith('he')) || null;
+    if (!heVoice) document.getElementById('voiceWarning').style.display = 'block';
+}
+speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+
+// ── Speech ──────────────────────────────────────────────────────────────────
+
+function speak(text) {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang  = 'he-IL';
+    u.rate  = 0.72;
+    u.pitch = 1.0;
+    if (heVoice) u.voice = heVoice;
+    speechSynthesis.speak(u);
+
+    const el = document.getElementById('bigLetter');
+    el.classList.remove('playing');
+    void el.offsetWidth; // reflow to restart animation
+    el.classList.add('playing');
+    setTimeout(() => el.classList.remove('playing'), 500);
+}
+
+// ── State helpers ────────────────────────────────────────────────────────────
+
+function combo() {
+    return LETTERS[selLetter].forms[0] + VOWELS[selVowel].symbol;
+}
+
+function updateDisplay() {
+    const l = LETTERS[selLetter];
+    const v = VOWELS[selVowel];
+    document.getElementById('bigLetter').textContent  = combo();
+    document.getElementById('letterName').textContent  = l.name;
+    document.getElementById('vowelTag').textContent    = `${v.name} · ${v.sound}`;
+    document.getElementById('soundDesc').textContent   = v.desc;
+}
+
+function pickLetter(i) {
+    document.querySelectorAll('.letter-btn').forEach(b => b.classList.remove('selected'));
+    selLetter = i;
+    document.querySelectorAll('.letter-btn')[i].classList.add('selected');
+    updateDisplay();
+    speak(combo());
+    document.getElementById('hint').style.display = 'none';
+}
+
+function pickVowel(i) {
+    document.querySelectorAll('.vowel-btn').forEach(b => b.classList.remove('selected'));
+    selVowel = i;
+    document.querySelectorAll('.vowel-btn')[i].classList.add('selected');
+    updateDisplay();
+}
+
+// ── Build vowel buttons ──────────────────────────────────────────────────────
+
+const vowelGrid = document.getElementById('vowelGrid');
+VOWELS.forEach((v, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'vowel-btn' + (i === 0 ? ' selected' : '');
+    // 'א' + v.symbol works for all vowels, including vav-vowels (אוֹ, אוּ)
+    btn.innerHTML = `
+        <span class="v-glyph">א${v.symbol}</span>
+        <span class="v-name">${v.name}</span>
+        <span class="v-sound">${v.sound}</span>
+    `;
+    btn.addEventListener('click', () => pickVowel(i));
+    vowelGrid.appendChild(btn);
+});
+
+// ── Build letter buttons ─────────────────────────────────────────────────────
+
+const letterGrid = document.getElementById('letterGrid');
+LETTERS.forEach((l, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'letter-btn' + (i === 0 ? ' selected' : '');
+    const altForms = l.forms.length > 1
+        ? `<span class="l-sofit"> / ${l.forms.slice(1).join('/')}</span>`
+        : '';
+    btn.innerHTML = `
+        <span class="l-heb">${l.forms[0]}${altForms}</span>
+        <span class="l-name">${l.name}</span>
+        <span class="l-translit">${l.translit}</span>
+    `;
+    btn.addEventListener('click', () => pickLetter(i));
+    letterGrid.appendChild(btn);
+});
+
+// ── Play button & big-letter click ───────────────────────────────────────────
+
+document.getElementById('playBtn').addEventListener('click', () => speak(combo()));
+document.getElementById('bigLetter').addEventListener('click', () => speak(combo()));
+
+// Initial display (no auto-speak on load)
+updateDisplay();
+</script>
+</body>
+</html>
