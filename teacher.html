@@ -340,11 +340,125 @@
             margin-top: 8px;
         }
 
+        /* ── Curriculum layout ── */
+        .curriculum-intro {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 22px;
+            line-height: 1.5;
+        }
+        .unit-section { margin-bottom: 6px; }
+        .unit-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 10px 9px;
+            border-bottom: 1.5px solid var(--border);
+            margin-bottom: 2px;
+        }
+        .unit-badge {
+            display: inline-block;
+            font-size: 0.58rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 3px 9px;
+            border-radius: 20px;
+        }
+        .unit-intro-badge { background: #f3e8ff; color: #7c3aed; }
+        .unit-1-badge { background: #dbeafe; color: #1d4ed8; }
+        .unit-2-badge { background: #dcfce7; color: #166534; }
+        .unit-3-badge { background: var(--gold-light); color: var(--gold); }
+        .unit-4-badge { background: #fee2e2; color: #b91c1c; }
+        .unit-5-badge { background: #f0fdf4; color: #15803d; }
+        .unit-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            color: var(--text);
+        }
+        .unit-sub {
+            font-size: 0.68rem;
+            color: var(--muted);
+            margin-left: auto;
+        }
+
+        .curriculum-list { display: flex; flex-direction: column; }
+        .lesson-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 10px;
+            border-bottom: 1px solid #f0f2f5;
+            transition: background 0.1s;
+            border-radius: 6px;
+        }
+        .lesson-row:hover { background: #f8f9fb; }
+        .lesson-row:last-child { border-bottom: none; }
+        .lesson-num {
+            width: 26px;
+            min-width: 26px;
+            text-align: center;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #c9d0db;
+        }
+        .lesson-heb {
+            width: 48px;
+            min-width: 48px;
+            text-align: center;
+            font-size: 1.45rem;
+            font-family: 'Times New Roman', Georgia, serif;
+            direction: rtl;
+            line-height: 1;
+            color: var(--blue);
+        }
+        .lesson-name {
+            flex: 1;
+            font-size: 0.84rem;
+            font-weight: 600;
+        }
+        .lesson-type {
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        .tag-letter  { background: var(--blue-light);  color: var(--blue); }
+        .tag-vowel   { background: var(--gold-light);   color: var(--gold); }
+        .tag-concept { background: #f3e8ff;              color: #7c3aed; }
+        .lesson-sound {
+            font-size: 0.74rem;
+            color: var(--muted);
+            min-width: 120px;
+            text-align: right;
+            font-style: italic;
+        }
+        .review-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 10px;
+            background: #f8f9fb;
+            border-radius: 6px;
+            border: 1.5px dashed var(--border);
+            margin: 6px 0;
+            font-size: 0.72rem;
+            color: var(--muted);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
         /* ── Responsive ── */
         @media (max-width: 680px) {
             .quick-grid { grid-template-columns: 1fr; }
             .lesson-grid { grid-template-columns: 1fr; }
             .dash-header { flex-direction: column; align-items: flex-start; }
+            .lesson-sound { display: none; }
+            .unit-sub { display: none; }
         }
 
         @media print {
@@ -410,83 +524,329 @@
         </div>
     </div>
 
-    <!-- ── Lesson Plans ──────────────────────────────────────────────────────── -->
+    <!-- ── Curriculum ───────────────────────────────────────────────────────── -->
     <div class="content-card">
-        <div class="section-label">Lesson Plans</div>
-        <div class="lesson-grid">
+        <div class="section-label">Course Curriculum</div>
+        <p class="curriculum-intro">
+            33 lessons following the <em>Aleph Bet Packet</em> sequence. Letters and vowels are introduced together so students can read real syllables from Lesson 1.
+        </p>
 
-            <div class="lesson-card">
-                <span class="lesson-tag tag-intro">Intro</span>
-                <div class="lesson-title">Lesson 1 — The Aleph-Bet</div>
-                <div class="lesson-desc">Introduce the 22 Hebrew consonants, their shapes, names, and basic sounds. Use the Letters page for audio reinforcement.</div>
-                <div class="lesson-meta">
-                    <span>
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="11" height="11"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
-                        45 min
-                    </span>
-                    <span>
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="11" height="11"><path d="M12 2a5 5 0 1 1 0 10A5 5 0 0 1 12 2zm0 12c5.33 0 8 2.67 8 4v2H4v-2c0-1.33 2.67-4 8-4z"/></svg>
-                        Beginner
-                    </span>
+        <!-- ── Intro ── -->
+        <div class="unit-section">
+            <div class="unit-header">
+                <span class="unit-badge unit-intro-badge">Intro</span>
+                <span class="unit-title">Introduction to Hebrew Reading</span>
+            </div>
+            <div class="curriculum-list">
+                <div class="lesson-row">
+                    <span class="lesson-num">—</span>
+                    <span class="lesson-heb"></span>
+                    <span class="lesson-name">Hebrew is Read Right to Left</span>
+                    <span class="lesson-type tag-concept">Rule</span>
+                    <span class="lesson-sound">Rule of Reading #1</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">—</span>
+                    <span class="lesson-heb"></span>
+                    <span class="lesson-name">Consonants vs. Vowels — Vowels Are Helpers</span>
+                    <span class="lesson-type tag-concept">Concept</span>
+                    <span class="lesson-sound">Rules #2, #3, #4</span>
                 </div>
             </div>
-
-            <div class="lesson-card">
-                <span class="lesson-tag tag-intro">Intro</span>
-                <div class="lesson-title">Lesson 2 — Reading with Vowels</div>
-                <div class="lesson-desc">Introduce the nikud vowel system. Demonstrate how any letter + vowel forms a readable syllable using the decoding method.</div>
-                <div class="lesson-meta">
-                    <span>
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="11" height="11"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
-                        45 min
-                    </span>
-                    <span>
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="11" height="11"><path d="M12 2a5 5 0 1 1 0 10A5 5 0 0 1 12 2zm0 12c5.33 0 8 2.67 8 4v2H4v-2c0-1.33 2.67-4 8-4z"/></svg>
-                        Beginner
-                    </span>
-                </div>
-            </div>
-
-            <div class="lesson-card">
-                <span class="lesson-tag tag-vowels">Vowels</span>
-                <div class="lesson-title">Lesson 3 — The Shema</div>
-                <div class="lesson-desc">Use the home page diagram to walk students through decoding שְׁמַע letter by letter. Practice blending consonants and vowels aloud.</div>
-                <div class="lesson-meta">
-                    <span>
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="11" height="11"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
-                        30 min
-                    </span>
-                    <span>
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="11" height="11"><path d="M12 2a5 5 0 1 1 0 10A5 5 0 0 1 12 2zm0 12c5.33 0 8 2.67 8 4v2H4v-2c0-1.33 2.67-4 8-4z"/></svg>
-                        Beginner
-                    </span>
-                </div>
-            </div>
-
-            <div class="lesson-card placeholder">
-                <span class="lesson-tag tag-coming">Coming Soon</span>
-                <div class="lesson-title">Lesson 4 — Guttural Letters</div>
-                <div class="lesson-desc">א ה ח ע and how they affect nearby vowels. Introduction to the furtive patach rule.</div>
-                <div class="lesson-meta">
-                    <span>—</span>
-                </div>
-            </div>
-
-            <div class="lesson-card placeholder">
-                <span class="lesson-tag tag-coming">Coming Soon</span>
-                <div class="lesson-title">Lesson 5 — Dagesh</div>
-                <div class="lesson-desc">How the dagesh dot changes the sound of Bet/Vet, Kaf/Chaf, Pey/Fey, Shin/Sin.</div>
-                <div class="lesson-meta">
-                    <span>—</span>
-                </div>
-            </div>
-
-            <button class="add-lesson-btn">
-                <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                Add Lesson Plan
-            </button>
-
         </div>
+
+        <!-- ── Unit 1 ── -->
+        <div class="unit-section">
+            <div class="unit-header">
+                <span class="unit-badge unit-1-badge">Unit 1</span>
+                <span class="unit-title">First Letters &amp; Vowels</span>
+                <span class="unit-sub">Lessons 1–5</span>
+            </div>
+            <div class="curriculum-list">
+                <div class="lesson-row">
+                    <span class="lesson-num">1</span>
+                    <span class="lesson-heb">בּ</span>
+                    <span class="lesson-name">Bet</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"B" — blue, boo, baboon</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">2</span>
+                    <span class="lesson-heb">ַ ָ</span>
+                    <span class="lesson-name">Patach &amp; Kamatz</span>
+                    <span class="lesson-type tag-vowel">Vowel</span>
+                    <span class="lesson-sound">"Ah" — aqua, father</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">3</span>
+                    <span class="lesson-heb">ר</span>
+                    <span class="lesson-name">Reish</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"R" — roar, rainbow</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">4</span>
+                    <span class="lesson-heb">וּ ֻ</span>
+                    <span class="lesson-name">Shuruk &amp; Kubutz</span>
+                    <span class="lesson-type tag-vowel">Vowel</span>
+                    <span class="lesson-sound">"Ooh" — rude, Jewish, blue</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">5</span>
+                    <span class="lesson-heb">כ ך</span>
+                    <span class="lesson-name">Chaf &amp; Final Chaf</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"Ch" — throat clearing</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Unit 2 ── -->
+        <div class="unit-section">
+            <div class="unit-header">
+                <span class="unit-badge unit-2-badge">Unit 2</span>
+                <span class="unit-title">Silent Letters, Sh'va &amp; Core Consonants</span>
+                <span class="unit-sub">Lessons 6–10</span>
+            </div>
+            <div class="curriculum-list">
+                <div class="lesson-row">
+                    <span class="lesson-num">6</span>
+                    <span class="lesson-heb">מְ</span>
+                    <span class="lesson-name">Sh'va</span>
+                    <span class="lesson-type tag-vowel">Vowel</span>
+                    <span class="lesson-sound">"ih" — big, give; or silent</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">7</span>
+                    <span class="lesson-heb">א</span>
+                    <span class="lesson-name">Aleph</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">Silent — takes vowel sound</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">8</span>
+                    <span class="lesson-heb">ת</span>
+                    <span class="lesson-name">Tav</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"T" — Torah, tuba</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">9</span>
+                    <span class="lesson-heb">ה</span>
+                    <span class="lesson-name">Hey</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"H" — hands, house; silent at end</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">10</span>
+                    <span class="lesson-heb">י</span>
+                    <span class="lesson-name">Yod</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"Y" — yellow, yo</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Unit 3 ── -->
+        <div class="unit-section">
+            <div class="unit-header">
+                <span class="unit-badge unit-3-badge">Unit 3</span>
+                <span class="unit-title">Completing the Vowel System</span>
+                <span class="unit-sub">Lessons 11–17</span>
+            </div>
+            <div class="curriculum-list">
+                <div class="lesson-row">
+                    <span class="lesson-num">11</span>
+                    <span class="lesson-heb">ֶ ֱ</span>
+                    <span class="lesson-name">Segol &amp; Chataf Segol</span>
+                    <span class="lesson-type tag-vowel">Vowel</span>
+                    <span class="lesson-sound">"Eh" — bed, set</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">12</span>
+                    <span class="lesson-heb">ל</span>
+                    <span class="lesson-name">Lamed</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"L" — ladybug, lamp</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">13</span>
+                    <span class="lesson-heb">וֹ</span>
+                    <span class="lesson-name">Cholam</span>
+                    <span class="lesson-type tag-vowel">Vowel</span>
+                    <span class="lesson-sound">"Oh" — go, home</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">14</span>
+                    <span class="lesson-heb">אֵ</span>
+                    <span class="lesson-name">Tzeirei</span>
+                    <span class="lesson-type tag-vowel">Vowel</span>
+                    <span class="lesson-sound">"Ay" — okay, hey</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">15</span>
+                    <span class="lesson-heb">נ ן</span>
+                    <span class="lesson-name">Nun &amp; Final Nun</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"N" — Nancy, none</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">16</span>
+                    <span class="lesson-heb">מ ם</span>
+                    <span class="lesson-name">Mem &amp; Final Mem</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"M" — mom, music</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">17</span>
+                    <span class="lesson-heb">ע</span>
+                    <span class="lesson-name">Ayin</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">Silent — like Aleph</span>
+                </div>
+                <div class="review-row">
+                    ✦ &nbsp; Mid-Course Review — Letters א ה ת ל + all vowels learned so far
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Unit 4 ── -->
+        <div class="unit-section">
+            <div class="unit-header">
+                <span class="unit-badge unit-4-badge">Unit 4</span>
+                <span class="unit-title">Building the Full Aleph-Bet</span>
+                <span class="unit-sub">Lessons 18–29</span>
+            </div>
+            <div class="curriculum-list">
+                <div class="lesson-row">
+                    <span class="lesson-num">18</span>
+                    <span class="lesson-heb">פּ</span>
+                    <span class="lesson-name">Pei</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"P" — pail, purple</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">19</span>
+                    <span class="lesson-heb">אִ</span>
+                    <span class="lesson-name">Chirik</span>
+                    <span class="lesson-type tag-vowel">Vowel</span>
+                    <span class="lesson-sound">"Ee" — queen, see</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">20</span>
+                    <span class="lesson-heb">ג</span>
+                    <span class="lesson-name">Gimel</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"G" — go, gift</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">21</span>
+                    <span class="lesson-heb">פ ף</span>
+                    <span class="lesson-name">Fei &amp; Final Fei</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"F" — fee, phone</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">22</span>
+                    <span class="lesson-heb">צ ץ</span>
+                    <span class="lesson-name">Tzadi &amp; Final Tzadi</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"Tz" — pizza, nuts</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">23</span>
+                    <span class="lesson-heb">ח</span>
+                    <span class="lesson-name">Chet</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"Ch" — throat (like Chaf)</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">24</span>
+                    <span class="lesson-heb">שׁ</span>
+                    <span class="lesson-name">Shin</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"Sh" — shalom, shoe</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">25</span>
+                    <span class="lesson-heb">ק</span>
+                    <span class="lesson-name">Kuf</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"K" — kite, cup</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">26</span>
+                    <span class="lesson-heb">ד</span>
+                    <span class="lesson-name">Dalet</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"D" — door, dog</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">27</span>
+                    <span class="lesson-heb">ו</span>
+                    <span class="lesson-name">Vav</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"V" — vine, very</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">28</span>
+                    <span class="lesson-heb">ט</span>
+                    <span class="lesson-name">Tet</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"T" — alternate Tav</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">29</span>
+                    <span class="lesson-heb">ב</span>
+                    <span class="lesson-name">Vet</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"V" — Bet without dagesh</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Unit 5 ── -->
+        <div class="unit-section">
+            <div class="unit-header">
+                <span class="unit-badge unit-5-badge">Unit 5</span>
+                <span class="unit-title">Completing the Aleph-Bet</span>
+                <span class="unit-sub">Lessons 30–33</span>
+            </div>
+            <div class="curriculum-list">
+                <div class="lesson-row">
+                    <span class="lesson-num">30</span>
+                    <span class="lesson-heb">כּ</span>
+                    <span class="lesson-name">Kaf</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"K" — Chaf with dagesh</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">31</span>
+                    <span class="lesson-heb">שׂ</span>
+                    <span class="lesson-name">Sin</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"S" — Sarah, sun</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">32</span>
+                    <span class="lesson-heb">ס</span>
+                    <span class="lesson-name">Samekh</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"S" — same as Sin</span>
+                </div>
+                <div class="lesson-row">
+                    <span class="lesson-num">33</span>
+                    <span class="lesson-heb">ז</span>
+                    <span class="lesson-name">Zayin</span>
+                    <span class="lesson-type tag-letter">Letter</span>
+                    <span class="lesson-sound">"Z" — zoo, zebra</span>
+                </div>
+                <div class="review-row">
+                    ✦ &nbsp; Final Review — Complete Aleph-Bet + all vowels
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- ── Resources ─────────────────────────────────────────────────────────── -->
@@ -549,10 +909,6 @@
         localStorage.setItem(NOTES_KEY, notesArea.value);
     });
 
-    // Placeholder for "Add Lesson Plan" button
-    document.querySelector('.add-lesson-btn').addEventListener('click', () => {
-        alert('Lesson plan builder coming soon!');
-    });
 </script>
 </body>
 </html>
